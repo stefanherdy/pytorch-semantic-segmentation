@@ -133,7 +133,7 @@ if __name__ == "__main__":
     parser.add_argument("--learnrate", type=int, default=0.0001, help='learn rate of optimizer')
     parser.add_argument("--optimizer", choices=['sgd', 'adam'], default='adam')
     parser.add_argument("--epochs", type=int, default=7000)
-    parser.add_argument("--eval_every", type=int, default=5, help="Epochs between evaluation")
+    parser.add_argument("--eval_every", type=int, default=1, help="Epochs between evaluation")
     parser.add_argument("--print_every", type=int, default=5, help="Epochs between print")
     parser.add_argument("--ckpt_every", type=int, default=200, help="Epochs between checkpoint save")
     parser.add_argument("--energy", type=bool, default=True, help="Set p(x) optimization on(True)/off(False)")

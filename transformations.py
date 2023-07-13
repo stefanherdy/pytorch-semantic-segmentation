@@ -126,11 +126,11 @@ class RandomCrop:
 
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
 
-        crop_width = 512
-        crop_height =512
+        crop_width = 128
+        crop_height =128
 
         max_x = inp.shape[1] - crop_width
-        print(max_x)
+        #print(max_x)
         max_y = inp.shape[2] - crop_height
         x = random.randint(0, max_x)
         y = random.randint(0, max_y)

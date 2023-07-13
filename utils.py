@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 import pathlib
 from customdatasets import CustomDataSet
 from transformations import Compose, DenseTarget, RandomFlip, Resize_Sample
-from transformations import MoveAxis, Normalize01, RandomCrop, RandomCropVal_JEM, RandomCropTrain_JEM
+from transformations import MoveAxis, Normalize01, RandomCrop
 import segmentation_models_pytorch as smp
 from sklearn.model_selection import train_test_split
 from os import walk
@@ -42,16 +42,16 @@ def import_data(args, batch_sz, set = 'project_3'):
 
     root = pathlib.Path('./')
     if set == 'project_1':
-        inputs = get_files('./input_data/project_1/')
-        targets = get_files('./input_data/project_1/')
+        inputs = get_files('./input_data/project_1/image/')
+        targets = get_files('./input_data/project_1/target/')
 
     if set == 'project_2':
-        inputs = get_files('./input_data/project_2/')
-        targets = get_files('./input_data/project_2/')
+        inputs = get_files('./input_data/project_2/image/')
+        targets = get_files('./input_data/project_2/target/')
 
     if set == 'project_3':
-        inputs = get_files('./input_data/project_3/')
-        targets = get_files('./input_data/project_3/')
+        inputs = get_files('./input_data/project_3/image/')
+        targets = get_files('./input_data/project_3/target/')
 
     split = 0.8  
 
