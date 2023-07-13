@@ -28,24 +28,6 @@ random.seed(seed)
 np.random.seed(seed)
 t.manual_seed(seed)
 
-    
-
-def get_model(device):
-    
-    unet = smp.Unet('resnet152', classes=8, activation=None, encoder_weights='imagenet')
-    if t.cuda.is_available():
-        unet.cuda()     
-
-    
-    
-    print("Loading model")
-    
-    ckpt = t.load('./checkpoints/best_validation_ckpt.pt')
-    unet.load_state_dict(ckpt["model_state_dict"])
-    unet = unet.to(device)
-
-
-    return unet
 
     
 def predict(args, model, dload, device, set):
@@ -58,8 +40,6 @@ def predict(args, model, dload, device, set):
         logits = model(x_p_d)
         loss = nn.CrossEntropyLoss(reduce=False)(logits, y_p_d).cpu().numpy()
         correct = np.mean((logits.max(1)[1] == y_p_d).float().cpu().numpy())
-        #print(np.unique(logits.max(1)[1].float().cpu().numpy()))
-        #print(np.unique(y_p_d.float().cpu().numpy()))
         print('True: ' + str(i) + '_' + str(correct))
         correctlist.append(correct)
         logits_max = logits.max(1)[1].float().cpu().numpy()
@@ -106,8 +86,9 @@ def evaluate(args):
     t.manual_seed(seed)
     if t.cuda.is_available():
         t.cuda.manual_seed_all(seed)
-    set = 'project 3'
+    set = 'project_3'
     batch_sz = 2
+    num_classes = 8
 
     
     dload_train, dload_valid = import_data(args, batch_sz, set)
@@ -116,7 +97,7 @@ def evaluate(args):
     
 
         
-    f = get_model(device, set)
+    f = get_model(device, num_classes)
     with t.no_grad():
         predict(args, f, dload_valid, device, set)
         
