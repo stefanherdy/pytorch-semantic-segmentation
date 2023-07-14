@@ -195,5 +195,5 @@ def mIOU(pred, label, num_classes=8):
             iou_now = float(intersection_now) / float(union_now)
             present_iou_list.append(iou_now)
         iou_list.append(iou_now)
-        miou = np.mean(present_iou_list)
+    miou = np.mean(present_iou_list)
     return miou
