@@ -3,6 +3,8 @@ Semantic Image Segmentation using Pytorch
 
 This repository is about the full process from data preprocessing to the training to the evaluation of the models. 
 
+![segmantation image](https://github.com/stefanherdy/pytorch-semantic-segmentation/blob/main/img/seg.png?raw=true)
+
 Detailed descriptions of my code can be found on my articles on Medium:
 - How to Augment Images for Semantic Segmentation
   https://medium.com/@stefan.herdy/how-to-augment-images-for-semantic-segmentation-2d7df97544de
