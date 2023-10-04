@@ -47,13 +47,11 @@ def get_mask(PROJECT_ID, api_key, colour):
             for idx, obj in enumerate(data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects']):
                 # Extract mask name and mask url
                 name = data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects'][idx]['name']
-                print(name)
                 url = data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects'][idx]['mask']['url']
 
                 cl = idx + 1
+                print('Class ' + name + ' assigned to class index ' + str(cl))
                 
-
-                print(cl)
                 # Download mask
                 headers = {'Authorization': api_key}
                 with requests.get(url, headers=headers, stream=True) as r:
