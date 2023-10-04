@@ -16,9 +16,6 @@ Detailed descriptions of my code can be found on my articles on Medium:
   https://medium.com/@stefan.herdy/how-to-export-labelbox-annotations-eedb8cb4f217
   
 
-Installation
-Usage
-License
 
 Installation
 
