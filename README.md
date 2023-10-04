@@ -12,11 +12,10 @@ Detailed descriptions of my code can be found on my articles on Medium:
   https://medium.com/@stefan.herdy/pytorch-semantic-image-segmentation-b726589662e3
 - How to Evaluate Semantic Segmantation Models
   https://medium.com/@stefan.herdy/how-to-evaluate-semantic-segmantation-models-cd2539673701
+- How to Download Labelbox Image Annotations
+  https://medium.com/@stefan.herdy/how-to-export-labelbox-annotations-eedb8cb4f217
   
 
-Installation
-Usage
-License
 
 Installation
 
