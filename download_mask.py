@@ -36,7 +36,7 @@ def logits2rgb(img):
 
     return col.astype(int)
 
-def get_mask(PROJECT_ID, api_key, colour):
+def get_mask(PROJECT_ID, api_key, colour, class_indices):
     # Open export json. Change name if required
     with open('./export-result.ndjson') as f:
         data = ndjson.load(f)
@@ -49,7 +49,7 @@ def get_mask(PROJECT_ID, api_key, colour):
                 name = data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects'][idx]['name']
                 url = data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects'][idx]['mask']['url']
 
-                cl = idx + 1
+                cl = class_indices[name]
                 print('Class ' + name + ' assigned to class index ' + str(cl))
                 
                 # Download mask
@@ -78,11 +78,19 @@ def get_mask(PROJECT_ID, api_key, colour):
 
 
 
-
 if __name__ == "__main__":
     with open('./config.yaml', 'r') as file:
         config = yaml.safe_load(file)
     project_id = config['project_id']
     api_key = config['api_key']
     colour = True
-    get_mask(project_id, api_key, colour)
+
+    class_indices = {	"lichen" : 1,
+                        "cyano pale" : 2,
+                        "cyano dark" : 3,
+                        "vascular_plants" : 4,
+                        "moss" : 5,
+                        "other" : 6,
+                        }
+
+    get_mask(project_id, api_key, colour, class_indices)
