@@ -68,12 +68,14 @@ def get_mask(PROJECT_ID, api_key, colour):
             print(unique)
             if len(unique) > 1:
                 if colour == True:
-                    mask_full = logits2rgb(mask_full)
-                    mask_full = cv2.cvtColor(mask_full.astype('float32'), cv2.COLOR_RGB2BGR)
+                    mask_full_colour = logits2rgb(mask_full)
+                    mask_full_colour = cv2.cvtColor(mask_full_colour.astype('float32'), cv2.COLOR_RGB2BGR)
                 #res_mask = cv2.resize(mask_full, (512, 512), interpolation = cv2.INTER_NEAREST)
                 # Save Image
-                cv2.imwrite('./labels/' + data[i]['data_row']['external_id'].replace(".JPG", "") + '-mask.png', mask_full)
+                cv2.imwrite('./labels_colour/' + data[i]['data_row']['external_id'].replace(".JPG", "") + '-mask_colour.png', mask_full_colour)
+            cv2.imwrite('./labels_cathegorical/' + data[i]['data_row']['external_id'].replace(".JPG", "") + '-mask.png', mask_full)
         print('')
+
 
 
 
