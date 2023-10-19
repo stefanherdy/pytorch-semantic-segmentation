@@ -47,7 +47,7 @@ def get_mask(PROJECT_ID, api_key, colour, class_indices):
             image_name = data[i]['data_row']['external_id']
             label_name = image_name.replace(".JPG", "") + '-mask.png'
             if label_name not in files_in_folder:
-                mask_full = np.zeros((data[0]['media_attributes']['height'], data[0]['media_attributes']['width']))
+                mask_full = np.zeros((data[i]['media_attributes']['height'], data[i]['media_attributes']['width']))
                 # Iterate over all masks
                 for idx, obj in enumerate(data[i]['projects'][PROJECT_ID]['labels'][0]['annotations']['objects']):
                     # Extract mask name and mask url
