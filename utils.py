@@ -18,7 +18,7 @@ import torch.nn as nn
 def get_files(path):
     files = []
     for (dirpath, dirnames, filenames) in walk(path):
-        for names in filenames:
+        for names in sorted(filenames):
             files.append(dirpath + '/' + names)
     return files
 
