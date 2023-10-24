@@ -53,6 +53,7 @@ def import_data(args, batch_sz, set = 'project_3'):
         inputs = get_files('./input_data/project_3/image/')
         targets = get_files('./input_data/project_3/target/')
 
+    # ratio of whole number of images/ number of training images 
     split = 0.8  
 
     inputs_train, inputs_valid = train_test_split(
@@ -121,7 +122,7 @@ def eval_classification(f, dload, device):
         logits_max = logits.max(1)[1].float().cpu().numpy()
         label = target.float().cpu().numpy()
         
-        # You can print the evaluation results, if needed
+        # You can plot the evaluation results, if needed
         '''
         fig, axs = plt.subplots(2)
         axs[0].imshow(logits_max[0,:,:])
@@ -143,7 +144,6 @@ def checkpoint(f, tag, args, device, dload_train, dload_valid):
         "model_state_dict": f.state_dict(),
         "train": dload_train,
         "valid": dload_valid
-        #"sample": dload_sample,
     }
     t.save(ckpt_dict, os.path.join(args.save_dir, tag))
     f.to(device)
@@ -160,8 +160,6 @@ def logits2rgb(img):
     orange = [232,167,53]
 
     colours = [red, green, blue, yellow, black, white, cyan, orange]
-
-    
     
     shape = np.shape(img)
     h = int(shape[0])
@@ -176,7 +174,6 @@ def logits2rgb(img):
             col[x, y, :] = colours[int(val)]
 
     return col.astype(int)
-
 
 def mIOU(pred, label, num_classes=8):
     
