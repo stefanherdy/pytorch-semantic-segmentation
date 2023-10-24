@@ -67,8 +67,6 @@ def import_data(args, batch_sz, set = 'project_3'):
         random_state=42,
         train_size=split,
         shuffle=True)
-
-
     
     transforms = Compose([
         DenseTarget(),
@@ -97,18 +95,14 @@ def import_data(args, batch_sz, set = 'project_3'):
     # train dataloader
     dataloader_training = DataLoader(dataset=dataset_train,
                                     batch_size=batchsize,
-                                    shuffle=True
-                                    )
+                                    shuffle=True)
 
     # validation dataloader
     dataloader_validation = DataLoader(dataset=dataset_valid,
                                     batch_size=batchsize,
                                     shuffle=True)
 
-    
-    
     return dataloader_training, dataloader_validation
-
 
 
 def eval_classification(f, dload, device):
@@ -175,8 +169,7 @@ def logits2rgb(img):
 
     return col.astype(int)
 
-def mIOU(pred, label, num_classes=8):
-    
+def mIOU(pred, label, num_classes=8):  
     iou_list = list()
     present_iou_list = list()
 
