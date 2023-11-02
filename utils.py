@@ -18,7 +18,7 @@ import torch.nn as nn
 def get_files(path):
     files = []
     for (dirpath, dirnames, filenames) in walk(path):
-        for names in filenames:
+        for names in sorted(filenames):
             files.append(dirpath + '/' + names)
     return files
 
@@ -53,6 +53,7 @@ def import_data(args, batch_sz, set = 'project_3'):
         inputs = get_files('./input_data/project_3/image/')
         targets = get_files('./input_data/project_3/target/')
 
+    # ratio of whole number of images/ number of training images 
     split = 0.8  
 
     inputs_train, inputs_valid = train_test_split(
@@ -66,8 +67,6 @@ def import_data(args, batch_sz, set = 'project_3'):
         random_state=42,
         train_size=split,
         shuffle=True)
-
-
     
     transforms = Compose([
         DenseTarget(),
@@ -96,18 +95,14 @@ def import_data(args, batch_sz, set = 'project_3'):
     # train dataloader
     dataloader_training = DataLoader(dataset=dataset_train,
                                     batch_size=batchsize,
-                                    shuffle=True
-                                    )
+                                    shuffle=True)
 
     # validation dataloader
     dataloader_validation = DataLoader(dataset=dataset_valid,
                                     batch_size=batchsize,
                                     shuffle=True)
 
-    
-    
     return dataloader_training, dataloader_validation
-
 
 
 def eval_classification(f, dload, device):
@@ -121,7 +116,7 @@ def eval_classification(f, dload, device):
         logits_max = logits.max(1)[1].float().cpu().numpy()
         label = target.float().cpu().numpy()
         
-        # You can print the evaluation results, if needed
+        # You can plot the evaluation results, if needed
         '''
         fig, axs = plt.subplots(2)
         axs[0].imshow(logits_max[0,:,:])
@@ -143,7 +138,6 @@ def checkpoint(f, tag, args, device, dload_train, dload_valid):
         "model_state_dict": f.state_dict(),
         "train": dload_train,
         "valid": dload_valid
-        #"sample": dload_sample,
     }
     t.save(ckpt_dict, os.path.join(args.save_dir, tag))
     f.to(device)
@@ -160,8 +154,6 @@ def logits2rgb(img):
     orange = [232,167,53]
 
     colours = [red, green, blue, yellow, black, white, cyan, orange]
-
-    
     
     shape = np.shape(img)
     h = int(shape[0])
@@ -177,9 +169,7 @@ def logits2rgb(img):
 
     return col.astype(int)
 
-
-def mIOU(pred, label, num_classes=8):
-    
+def mIOU(pred, label, num_classes=8):  
     iou_list = list()
     present_iou_list = list()
 

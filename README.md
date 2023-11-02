@@ -23,7 +23,8 @@ $ git clone https://github.com/stefanherdy/pytorch-semantic-segmentation.git
 
 Usage
 
-    - First, add your custom datasets to the input_data folder
+    - First, add your custom datasets to the input_data folder (You can download image annotations from Labelbox using download_mask.py).
+    - If your Images have a background with label 0, you can run crop_bg.py to remove the background from the image.
     - Run train.py, optimize your hyperparameters
     - To evaluate the model rum evaluate.py
 
