@@ -19,7 +19,7 @@ def logits2rgb(img):
     cyan = [174,214,220]
     orange = [232,167,53]
 
-    colours = [red, green, blue, yellow, black, white, cyan, orange]
+    colours = [red, green, blue, yellow, black, white, cyan, orange, green, blue]
 
     
     
@@ -37,13 +37,17 @@ def logits2rgb(img):
 
     return col.astype(int)
 
-def get_mask(PROJECT_ID, api_key, colour, class_indices):
+def get_mask(PROJECT_ID, api_key, colour, class_indices, destination_path_colour, destination_path_categorical):
     # Open export json. Change name if required
-    with open('./export-result.ndjson') as f:
+    with open('./export-result_john_cam.ndjson') as f:
         data = ndjson.load(f)
         # Iterate over all images
+        if not os.path.isdir(destination_path_categorical):
+            os.mkdir(destination_path_categorical)
+        if not os.path.isdir(destination_path_colour):
+            os.mkdir(destination_path_colour)
         for i, d in enumerate(data):
-            files_in_folder = os.listdir('./labels_cathegorical/')
+            files_in_folder = os.listdir('./labels_categorical/')
             image_name = data[i]['data_row']['external_id']
             label_name = image_name.replace(".JPG", "") + '-mask.png'
             if label_name not in files_in_folder:
@@ -77,8 +81,8 @@ def get_mask(PROJECT_ID, api_key, colour, class_indices):
                         mask_full_colour = cv2.cvtColor(mask_full_colour.astype('float32'), cv2.COLOR_RGB2BGR)
                     #res_mask = cv2.resize(mask_full, (512, 512), interpolation = cv2.INTER_NEAREST)
                     # Save Image
-                    cv2.imwrite('./labels_colour/' + image_name.replace(".JPG", "") + '-mask.png', mask_full_colour)
-                cv2.imwrite('./labels_cathegorical/' + image_name.replace(".JPG", "") + '-mask.png', mask_full)
+                    cv2.imwrite(destination_path_colour + image_name.replace(".JPG", "") + '-mask.png', mask_full_colour)
+                cv2.imwrite(destination_path_categorical + image_name.replace(".JPG", "") + '-mask.png', mask_full)
             else:
                 print('File "' + label_name + '" already processed!')
         print('')
@@ -92,6 +96,9 @@ if __name__ == "__main__":
     api_key = config['api_key']
     colour = True
 
+    destination_path_colour = './labels_colour/'
+    destination_path_categorical = './labels_categorical/'
+
     class_indices = {	"lichen" : 1,
                         "cyano pale" : 2,
                         "cyano dark" : 3,
@@ -99,5 +106,5 @@ if __name__ == "__main__":
                         "moss" : 5,
                         "other" : 6,
                         }
-
-    get_mask(project_id, api_key, colour, class_indices)
+    
+    get_mask(project_id, api_key, colour, class_indices, destination_path_colour, destination_path_categorical)
