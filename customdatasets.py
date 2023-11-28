@@ -42,14 +42,10 @@ class CustomDataSet(data.Dataset):
 
             # Load input and target
             x, y = imread(input_ID), imread(target_ID)
-        y[y == 255] = 0
 
-        
         # Preprocessing
         if self.transform is not None:
             x, y = self.transform(x, y)
-        
-
         
         x, y = torch.from_numpy(x.copy()).type(self.inputs_dtype), torch.from_numpy(y.copy()).type(self.targets_dtype)
 

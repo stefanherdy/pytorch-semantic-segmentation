@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import pickle
 import json
@@ -5,7 +7,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 from torch.utils.data import DataLoader
 import pathlib
 from customdatasets import CustomDataSet
-from transformations import Compose, DenseTarget, RandomFlip, Resize_Sample
+from transformations import Compose, RandomFlip, Resize
 from transformations import MoveAxis, Normalize01, RandomCrop
 import segmentation_models_pytorch as smp
 from sklearn.model_selection import train_test_split
@@ -28,7 +30,6 @@ def makedirs(dirname):
 
 
 def get_model(device, cl):
-    
     unet = smp.Unet('resnet152', classes=cl, activation=None, encoder_weights='imagenet')
 
     if t.cuda.is_available():
@@ -38,9 +39,7 @@ def get_model(device, cl):
     return unet
 
 
-def import_data(args, batch_sz, set = 'project_3'):
-
-    root = pathlib.Path('./')
+def import_data(args, batch_sz, set, img_size, crop_size):
     if set == 'project_1':
         inputs = get_files('./input_data/project_1/image/')
         targets = get_files('./input_data/project_1/target/')
@@ -69,10 +68,10 @@ def import_data(args, batch_sz, set = 'project_3'):
         shuffle=True)
     
     transforms = Compose([
-        DenseTarget(),
         MoveAxis(),
         Normalize01(),
-        RandomCrop(),
+        Resize(img_size),
+        RandomCrop(crop_size),
         RandomFlip()
         ])
     
@@ -179,7 +178,6 @@ def mIOU(pred, label, num_classes=8):
         if target_inds.sum().item() == 0:
             iou_now = float('nan')
         else:
-            #inters =np.logical_and(pred_inds, target_inds).sum().item()
             intersection_now = (pred_inds[target_inds]).sum().item()
             union_now = pred_inds.sum().item() + target_inds.sum().item() - intersection_now
             iou_now = float(intersection_now) / float(union_now)

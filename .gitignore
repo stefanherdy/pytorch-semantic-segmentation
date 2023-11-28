@@ -2,3 +2,6 @@ checkpoints
 config.yaml
 export-result.ndjson
 export-result_john_cam.ndjson
+results
+plots
+records

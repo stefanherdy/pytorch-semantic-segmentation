@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# Detailed description about image augmentation and how to use the code:
+# https://medium.com/@stefan.herdy/how-to-augment-images-for-semantic-segmentation-2d7df97544de
 
 import numpy as np
 from sklearn.externals._pilutil import bytescale
@@ -6,28 +8,20 @@ import random
 import matplotlib.pyplot as plt
 import cv2
 import random
-
-
+import torch
+import torchvision.transforms as transforms
 
 def create_dense_target(tar: np.ndarray):
-    classes = np.unique(tar)
-    # print(unique)
-    dummy = tar[:,:]
-    return dummy
-
+    dense_tar = tar[:,:]
+    return dense_tar
 
 def normalize_01(inp: np.ndarray):
-    mi = np.min(inp)
-    ma = np.max(inp)
-    range = np.ptp(inp)
     inp_out = (inp - np.min(inp)) / np.ptp(inp)
     return inp_out
-
 
 def normalize(inp: np.ndarray, mean: float, std: float):
     inp_out = (inp - mean) / std
     return inp_out
-
 
 def re_normalize(inp: np.ndarray,
                  low: int = 0,
@@ -40,7 +34,7 @@ def re_normalize(inp: np.ndarray,
 
 class Compose:
     """
-    Composes several transforms together.
+    Composes several transformations together.
     """
 
     def __init__(self, transforms: list):
@@ -63,29 +57,48 @@ class MoveAxis:
 
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
         inp = np.moveaxis(inp, -1, 0)
-        #tar = np.moveaxis(tar, -1, 0)
         
-
         return inp, tar
 
     def __repr__(self):
         return str({self.__class__.__name__: self.__dict__})
 
-
-class DenseTarget:
-    """Creates segmentation maps with consecutive integers, starting from 0"""
-
+class ColorTransformations:
     def __init__(self):
         pass
 
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
-        tar = create_dense_target(tar)
+        inp_tensor = torch.from_numpy(inp)
+        tar_tensor = torch.from_numpy(tar)
+
+        color_transform = transforms.Compose([
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+        ])
+
+        inp_tensor = color_transform(inp_tensor)
+
+        inp = inp_tensor.numpy()
+        tar = tar_tensor.numpy()
 
         return inp, tar
 
-    def __repr__(self):
-        return str({self.__class__.__name__: self.__dict__})
+class ColorNoise:
+    def __init__(self, noise_std=0.05):
+        self.noise_std = noise_std
 
+    def __call__(self, inp: np.ndarray, tar: np.ndarray):
+        inp_tensor = torch.from_numpy(inp)
+        tar_tensor = torch.from_numpy(tar)
+
+        noise = torch.randn_like(inp_tensor) * self.noise_std
+        inp_tensor += noise
+
+        inp_tensor = torch.clamp(inp_tensor, 0, 1)
+
+        inp = inp_tensor.numpy()
+        tar = tar_tensor.numpy()
+
+        return inp, tar
 
 class RandomFlip:
 
@@ -95,7 +108,6 @@ class RandomFlip:
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
         rand = random.choice([0, 1])
         if rand == 1:
-            #inp = np.ndarray.copy(np.fliplr(inp))
             inp = np.moveaxis(inp, 0, -1)
             inp = cv2.flip(inp, 1)
             inp = np.moveaxis(inp, -1, 0)
@@ -103,7 +115,6 @@ class RandomFlip:
 
         rand = random.choice([0, 1])
         if rand == 1:
-            #inp = np.ndarray.copy(np.flipud(inp, axis=(1,2)))
             inp = np.moveaxis(inp, 0, -1)
             inp = cv2.flip(inp, 0)
             inp = np.moveaxis(inp, -1, 0)
@@ -121,40 +132,34 @@ class RandomFlip:
 
 class RandomCrop:
 
-    def __init__(self):
+    def __init__(self, crop_size):
+        self.crop_size = crop_size
         pass
 
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
-
-        crop_width = 128
-        crop_height =128
-
-        max_x = inp.shape[1] - crop_width
-        #print(max_x)
-        max_y = inp.shape[2] - crop_height
+        max_x = inp.shape[1] - self.crop_size
+        max_y = inp.shape[2] - self.crop_size
         x = random.randint(0, max_x)
         y = random.randint(0, max_y)
         inp = np.moveaxis(inp, 0, -1)
-        inp = inp[x: x + crop_width, y: y + crop_height,:]
+        inp = inp[x: x + self.crop_size, y: y + self.crop_size,:]
         inp = np.moveaxis(inp, -1, 0)
-        tar = tar[x: x + crop_width, y: y + crop_height]
+        tar = tar[x: x + self.crop_size, y: y + self.crop_size]
 
         return inp, tar
 
 
-class Resize_Sample:
+class Resize:
 
-    def __init__(self):
+    def __init__(self, img_size):
+        self.img_size = img_size
         pass
 
     def __call__(self, inp: np.ndarray, tar: np.ndarray):
-
-        
         inp = np.moveaxis(inp, 0, -1)
-        inp = cv2.resize(inp, (256,256), interpolation = cv2.INTER_NEAREST)
+        inp = cv2.resize(inp, (self.img_size,self.img_size), interpolation = cv2.INTER_NEAREST)
         inp = np.moveaxis(inp, -1, 0)
-        tar = cv2.resize(tar, (256,256), interpolation = cv2.INTER_NEAREST)
-
+        tar = cv2.resize(tar, (self.img_size,self.img_size), interpolation = cv2.INTER_NEAREST)
         return inp, tar
 
 

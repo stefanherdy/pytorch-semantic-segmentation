@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import cv2
 import matplotlib.pyplot as plt
@@ -8,7 +10,7 @@ set = ('project_3')
 rootdir = './input_data/' + set + '/mask/'
 
 classes = ['class_1', "class_2", 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8', 'class_9']
-# From Labelbox stats (can also be computet)
+# From Labelbox stats (can also be computed)
 classnum = [32, 41, 25, 47, 42, 58, 43, 39]
 
 classdist = np.zeros(8)

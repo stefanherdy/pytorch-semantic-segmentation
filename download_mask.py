@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Detailed description about how to use the code:
+# https://medium.com/@stefan.herdy/how-to-export-labelbox-annotations-eedb8cb4f217
+
 import yaml
 import requests
 import cv2
@@ -21,8 +24,6 @@ def logits2rgb(img):
 
     colours = [red, green, blue, yellow, black, white, cyan, orange, green, blue]
 
-    
-    
     shape = np.shape(img)
     h = int(shape[0])
     w = int(shape[1])
@@ -79,14 +80,11 @@ def get_mask(PROJECT_ID, api_key, colour, class_indices, destination_path_colour
                     if colour == True:
                         mask_full_colour = logits2rgb(mask_full)
                         mask_full_colour = cv2.cvtColor(mask_full_colour.astype('float32'), cv2.COLOR_RGB2BGR)
-                    #res_mask = cv2.resize(mask_full, (512, 512), interpolation = cv2.INTER_NEAREST)
                     # Save Image
                     cv2.imwrite(destination_path_colour + image_name.replace(".JPG", "") + '-mask.png', mask_full_colour)
                 cv2.imwrite(destination_path_categorical + image_name.replace(".JPG", "") + '-mask.png', mask_full)
             else:
                 print('File "' + label_name + '" already processed!')
-        print('')
-
 
 
 if __name__ == "__main__":
@@ -99,6 +97,7 @@ if __name__ == "__main__":
     destination_path_colour = './labels_colour/'
     destination_path_categorical = './labels_categorical/'
 
+    # Specify your custom class indices
     class_indices = {	"lichen" : 1,
                         "cyano pale" : 2,
                         "cyano dark" : 3,
