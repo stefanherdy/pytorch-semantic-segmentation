@@ -5,3 +5,4 @@ export-result_john_cam.ndjson
 results
 plots
 records
+__pycache__

@@ -117,7 +117,8 @@ if __name__ == "__main__":
     parser.add_argument("--resize", type=int, default=512, help="Size of images for resizing")
     parser.add_argument("--random_crop_size", type=int, default=256, help="Size of random crops. Must be smaller than resized images.")
     args = parser.parse_args()
-    
+    if args.random_crop_size > args.resize:
+        raise Exception("Crop size (--random_crop_size) must be smaller than resized image (--resize)!")
     
     main(args)
 
