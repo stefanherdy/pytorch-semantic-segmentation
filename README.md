@@ -14,6 +14,10 @@ Detailed descriptions of my code can be found on my articles on Medium:
   https://medium.com/@stefan.herdy/how-to-evaluate-semantic-segmantation-models-cd2539673701
 - How to Download Labelbox Image Annotations
   https://medium.com/@stefan.herdy/how-to-export-labelbox-annotations-eedb8cb4f217
+
+To perform further analysis (Curvature Computation) of the segmentation masks you can read the following article:
+- Compute the Curvature of a Binary Mask in Python
+  https://medium.com/@stefan.herdy/compute-the-curvature-of-a-binary-mask-in-python-5087a88c6288
   
 
 
@@ -26,7 +30,7 @@ Usage
     - First, add your custom datasets to the input_data folder (You can download image annotations from Labelbox using download_mask.py).
     - If your Images have a background with label 0, you can run crop_bg.py to remove the background from the image.
     - Run train.py, optimize your hyperparameters
-    - To evaluate the model rum evaluate.py
+    - To evaluate the model run evaluate.py
 
 
 License
