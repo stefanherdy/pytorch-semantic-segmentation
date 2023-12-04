@@ -6,3 +6,5 @@ results
 plots
 records
 __pycache__
+labels_categorical
+labels_colour
